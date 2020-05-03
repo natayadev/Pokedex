@@ -6,7 +6,8 @@ class PokeDex(toga.App):
         toga.App.__init__(self, title, id)
         self.title = title
         self.size=(WIDTH, HEIGHT)
-
+        self.heading = ["Name"]
+        self.data = ["Python", "Ruby", "Laravel"]
         self.create_elements(self)
 
     def startup(self):
@@ -24,9 +25,13 @@ class PokeDex(toga.App):
         self.create_table()
 
     def create_table(self):
-        self.table = toga.Table(["encabezado 1", "encabezado 2"])
+        self.table = toga.Table(self.heading, data=self.data, on_select=self.select_element)
 
 #callbacks
+def select_elements(self, widget, row):
+    if row:
+        print(row.name)
+
 if __name__ == "__main__":
     pokedex = PokeDex("PokeDex", "page")
     pokedex.main_loop()
