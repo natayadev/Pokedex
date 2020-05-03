@@ -58,13 +58,36 @@ class PokeDex(toga.App):
         thread=threading.Thread(target=self.load_data)
         thread.start()
 
+    def load_async_pokemon(self, pokemon):
+        thread=threading.Thread(target=self.load_pokemon, args=[pokemon])
+        thread.start()
+
+    def load_pokemon(self, pokemon):
+        path = "https://pokeapi.co/api/v2/pokemon/{}".format(pokemon)
+        response = requests.get(path)
+        if response:
+            result = response.json()
+
+            name = result["forms"][0]["name"]
+            abilities = list()
+            for ability in result["abilities"]:
+                name_ability = ability["ability"]["name"]
+                abilities.append(name_ability)
+
+            sprite = result["sprites"]["front_default"]
+
+            print(name)
+            print(abilities)
+            print(sprite)
+
     def load_data(self):
         self.data.clear()
-        path="https://pokeapi.co/api/v2/pokemon-form?offset={}&limit=20".format(self.offset)
+        path = "https://pokeapi.co/api/v2/pokemon-form?offset={}&limit=20".format(self.offset)
 
         response = request.get(path)
         if response:
             result = responde.json()
+            print(row.name)
 
             for pokemon in result["results"]:
                 name=pokemon["name"]
@@ -86,7 +109,7 @@ class PokeDex(toga.App):
 
     def select_elements(self, widget, row):
         if row:
-            print(row.name)
+            self.load_async_pokemon(row.name)
 
 if __name__ == "__main__":
     pokedex = PokeDex("PokeDex", "page")
