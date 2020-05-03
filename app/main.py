@@ -1,5 +1,6 @@
 import toga
 import requests
+import threading
 
 from const import *
 
@@ -14,7 +15,7 @@ class PokeDex(toga.App):
         self.data = list()
 
         self.create_elements(self)
-        self.load_data()
+        self.load_async_data()
 
     def startup(self):
         self.main_window = toga.MainWindow("main", title=self.title,size=(400,500))
@@ -32,6 +33,10 @@ class PokeDex(toga.App):
 
     def create_table(self):
         self.table = toga.Table(self.heading, data=self.data, on_select=self.select_element)
+
+    def load_async_data(self):
+        thread=threading.Thread(target=self.load_data)
+        thread.start()
 
     def load_data(self):
         path="https://pokeapi.co/api/v2/pokemon-form?offset=0&limit=20"
