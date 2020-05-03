@@ -6,14 +6,25 @@ class PokeDex(toga.App):
         toga.App.__init__(self, title, id)
         self.title = title
         self.size=(WIDTH, HEIGHT)
+
+        self.create_elements(self)
+
     def startup(self):
         self.main_window = toga.MainWindow("main", title=self.title,size=(400,500))
         box=toga.Box()
-        self.main_window.content = box
+
+        split =  toga.SplitContainer()
+        split.content = [self.table, box]
+
+
+        self.main_window.content = split
         self.main_window.show()
 
     def create_elements(self):
-        pass
+        self.create_table()
+
+    def create_table(self):
+        self.table = toga.Table(["encabezado 1", "encabezado 2"])
 
 #callbacks
 if __name__ == "__main__":
