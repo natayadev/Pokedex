@@ -9,13 +9,16 @@ class PokeDex(toga.App):
         toga.App.__init__(self, title, id)
 
         self.title = title
-        self.size=(WIDTH, HEIGHT)
+        self.size = (WIDTH, HEIGHT)
 
         self.heading = ["Name"]
         self.data = list()
 
+        self.offset = 0
+
         self.create_elements(self)
         self.load_async_data()
+        self.validate_previous_command()
 
     def startup(self):
         self.main_window = toga.MainWindow("main", title=self.title,size=(400,500))
@@ -51,7 +54,8 @@ class PokeDex(toga.App):
         thread.start()
 
     def load_data(self):
-        path="https://pokeapi.co/api/v2/pokemon-form?offset=0&limit=20"
+        self.data.clear()
+        path="https://pokeapi.co/api/v2/pokemon-form?offset={}&limit=20".format(self.offset)
 
         response = request.get(path)
         if response:
@@ -65,10 +69,17 @@ class PokeDex(toga.App):
 
 #callbacks
     def next(self, widget):
-        print("Next")
+        self.offset += 1
+        self.load_async_data()
 
     def previous(self, widget):
-        print("Previous")
+        self.offset -= 1
+        self.load_async_data()
+
+        self.validate_previous_command()
+
+    def validate_previous_command(self):
+        self.previous_command.enabled = not self.offset == 0
 
     def select_elements(self, widget, row):
         if row:
