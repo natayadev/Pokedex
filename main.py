@@ -17,7 +17,12 @@ class PokeDex(toga.App):
         self.offset = 0
 
         self.create_elements(self)
+
+    def handler_command(self, widget):
+        widget.enabled = False
         self.load_async_data()
+
+        widget.enabled = True
         self.validate_previous_command()
 
     def startup(self):
@@ -70,13 +75,11 @@ class PokeDex(toga.App):
 #callbacks
     def next(self, widget):
         self.offset += 1
-        self.load_async_data()
+        self.handler_command(widget)
 
     def previous(self, widget):
         self.offset -= 1
-        self.load_async_data()
-
-        self.validate_previous_command()
+        self.handler_command(widget)
 
     def validate_previous_command(self):
         self.previous_command.enabled = not self.offset == 0
