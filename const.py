@@ -11,3 +11,5 @@ BULBASAUR_ICON = os.path.join(ICON_DIR, "balbasaur.png")
 METAPOD_ICON = os.path.join(ICON_DIR, "metapod.png")
 
 PIDGEY_ICON = os.path.join(ICON_DIR, "pidgey.png")
+
+TITLE = "SELECT A POKEMON"
