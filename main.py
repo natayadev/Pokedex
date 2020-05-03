@@ -4,6 +4,8 @@ import threading
 
 from const import *
 
+from toga.style.pack import *
+
 class PokeDex(toga.App):
     def __init__(self, title, id):
         toga.App.__init__(self, title, id)
@@ -27,8 +29,14 @@ class PokeDex(toga.App):
 
     def startup(self):
         self.main_window = toga.MainWindow("main", title=self.title,size=(400,500))
-        information_area=toga.Box()
-        information_area.add(self.image_view)
+        information_area=toga.Box(
+            children=[self.image_view, self.pokemon_name, self.pokemon_description],
+            style=Pack(
+                direction=COLUMN,
+                alignment=CENTER
+            )
+        )
+
         split =  toga.SplitContainer()
         split.content = [self.table, information_area]
 
@@ -41,6 +49,15 @@ class PokeDex(toga.App):
         self.create_table()
         self.create_toolbar()
         self.create_image(PIDGEY_ICON)
+        self.create_label()
+
+    def create_label(self):
+        style=Pack(text_align=CENTER)
+
+        self.pokemon_name = toga.Label("Name", style=style)
+        self.pokemon_description = toga.Label("Description", style=style)
+        self.pokemon_name.style.font_size = 20
+        self.pokemon_name.style.padding_bottom = 10
 
     def create_toolbar(self):
         self.create_next_command()
@@ -55,9 +72,12 @@ class PokeDex(toga.App):
     def create_table(self):
         self.table = toga.Table(self.heading, data=self.data, on_select=self.select_element)
 
-    def create_image(self, path):
+    def create_image(self, path, width=200, height=200):
         image = toga.Image(path)
-        self.image_view = toga.ImageView(image)
+
+        style = Pack(width=width,height=height)
+
+        self.image_view = toga.ImageView(image, style=style)
 
     def load_async_data(self):
         self.data.clear()
